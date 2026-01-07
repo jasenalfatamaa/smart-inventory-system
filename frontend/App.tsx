@@ -20,7 +20,7 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode; roles?: UserRole[] }
   const { isAuthenticated, isLoading, user } = useAuth();
   if (isLoading) return (
     <div className="h-screen flex items-center justify-center bg-slate-950">
-      <motion.div 
+      <motion.div
         animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
         transition={{ duration: 2, repeat: Infinity }}
         className="w-12 h-12 border-4 border-sky-500 border-t-transparent rounded-full"
@@ -58,7 +58,7 @@ const Layout: React.FC = () => {
         setIsSidebarCollapsed(false);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -70,23 +70,23 @@ const Layout: React.FC = () => {
       <div className="fixed bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-blue-200/10 blur-[120px] rounded-full pointer-events-none" />
 
       <Sidebar collapsed={isSidebarCollapsed} setCollapsed={setIsSidebarCollapsed} />
-      
+
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
         <Navbar toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
-        
+
         <main className="flex-1 overflow-y-auto px-4 md:px-8 pb-8 custom-scrollbar relative z-10">
           <AnimatePresence mode="wait">
-             <Routes location={location} key={location.pathname}>
-                <Route path="/" element={<PageWrapper><Dashboard /></PageWrapper>} />
-                <Route path="/inventory" element={<PageWrapper><Inventory /></Route>} />
-                <Route path="/logs" element={<PageWrapper><TransactionLogs /></PageWrapper>} />
-                <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
-                <Route path="/users" element={
-                  <ProtectedRoute roles={['SUPER_ADMIN']}>
-                    <PageWrapper><UserManagement /></PageWrapper>
-                  </ProtectedRoute>
-                } />
-             </Routes>
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<PageWrapper><Dashboard /></PageWrapper>} />
+              <Route path="/inventory" element={<PageWrapper><Inventory /></PageWrapper>} />
+              <Route path="/logs" element={<PageWrapper><TransactionLogs /></PageWrapper>} />
+              <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+              <Route path="/users" element={
+                <ProtectedRoute roles={['SUPER_ADMIN']}>
+                  <PageWrapper><UserManagement /></PageWrapper>
+                </ProtectedRoute>
+              } />
+            </Routes>
           </AnimatePresence>
         </main>
       </div>

@@ -2,11 +2,17 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Product } from "./types";
 
-// Always initialize the client with process.env.API_KEY directly
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+// Initialize client safely - if key is missing, AI features will error gracefully when called, not crash app on load.
+const API_KEY = process.env.API_KEY || "";
 
 export const getAIInventoryInsights = async (products: Product[]) => {
+  if (!API_KEY) {
+    console.warn("Gemini API Key is missing.");
+    return "AI Insights tidak tersedia (API Key missing).";
+  }
+
   try {
+    const ai = new GoogleGenAI({ apiKey: API_KEY });
     const inventorySummary = products.map(p => ({
       name: p.name,
       current: p.stock,
