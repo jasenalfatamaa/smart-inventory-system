@@ -1,9 +1,42 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=inventory
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    restart: always
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+    restart: always
     ports:
       - "8080:80"
-    environment:
-      - VITE_GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

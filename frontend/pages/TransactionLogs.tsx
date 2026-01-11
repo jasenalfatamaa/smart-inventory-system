@@ -5,27 +5,27 @@ import { useInventory } from '../context';
 
 const TransactionLogs: React.FC = () => {
   const { transactions, searchTerm } = useInventory();
-  
+
   const [filterType, setFilterType] = useState('All');
   const [filterUser, setFilterUser] = useState('All');
   const [startDate, setStartDate] = useState(''); // Format: YYYY-MM-DD
   const [endDate, setEndDate] = useState('');     // Format: YYYY-MM-DD
 
   const uniqueUsers = useMemo(() => {
-    return ['All', ...Array.from(new Set(transactions.map(tx => tx.user)))];
+    return ['All', ...Array.from(new Set(transactions.map(tx => tx.userName)))];
   }, [transactions]);
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter(tx => {
       const txDateStr = tx.date.split('T')[0];
-      
-      const matchesSearch = 
+
+      const matchesSearch =
         tx.productName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        tx.user.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        (tx.userName || '').toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesType = filterType === 'All' || tx.type === filterType;
-      const matchesUser = filterUser === 'All' || tx.user === filterUser;
-      
+      const matchesUser = filterUser === 'All' || tx.userName === filterUser;
+
       const matchesStartDate = !startDate || txDateStr >= startDate;
       const matchesEndDate = !endDate || txDateStr <= endDate;
 
@@ -76,11 +76,11 @@ const TransactionLogs: React.FC = () => {
             <Filter size={16} className="text-sky-500" />
             Advanced Filters
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div>
               <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Type</label>
-              <select 
+              <select
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-white font-medium outline-none focus:ring-2 focus:ring-sky-500/20"
                 value={filterType}
                 onChange={e => setFilterType(e.target.value)}
@@ -93,7 +93,7 @@ const TransactionLogs: React.FC = () => {
 
             <div>
               <label className="block text-[10px] font-bold text-slate-400 uppercase mb-1">Authorized By</label>
-              <select 
+              <select
                 className="w-full px-3 py-2 border border-slate-200 rounded-lg text-xs bg-white font-medium outline-none focus:ring-2 focus:ring-sky-500/20"
                 value={filterUser}
                 onChange={e => setFilterUser(e.target.value)}
@@ -114,15 +114,15 @@ const TransactionLogs: React.FC = () => {
                   <div className="flex-1"></div>
                   <ChevronDown size={14} className="text-slate-400 group-hover:text-sky-500 transition-colors" />
                 </div>
-                
+
                 {/* Functional Layer - Invisible on Top */}
-                <input 
+                <input
                   type="date"
                   className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none"
                   value={startDate}
                   onChange={e => setStartDate(e.target.value)}
                   onClick={(e) => {
-                    try { (e.target as any).showPicker(); } catch(err) {}
+                    try { (e.target as any).showPicker(); } catch (err) { }
                   }}
                 />
               </div>
@@ -141,19 +141,19 @@ const TransactionLogs: React.FC = () => {
                     <div className="flex-1"></div>
                     <ChevronDown size={14} className="text-slate-400 group-hover:text-sky-500 transition-colors" />
                   </div>
-                  
+
                   {/* Functional Layer */}
-                  <input 
+                  <input
                     type="date"
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10 appearance-none"
                     value={endDate}
                     onChange={e => setEndDate(e.target.value)}
                     onClick={(e) => {
-                      try { (e.target as any).showPicker(); } catch(err) {}
+                      try { (e.target as any).showPicker(); } catch (err) { }
                     }}
                   />
                 </div>
-                <button 
+                <button
                   onClick={resetFilters}
                   className="p-2 text-slate-400 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition-all shrink-0 border border-slate-100"
                   title="Reset Filters"
@@ -211,7 +211,7 @@ const TransactionLogs: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-                       <span className="truncate">{log.user}</span>
+                      <span className="truncate">{log.userName}</span>
                     </div>
                   </td>
                 </tr>
@@ -220,9 +220,9 @@ const TransactionLogs: React.FC = () => {
                 <tr>
                   <td colSpan={5} className="px-6 py-20 text-center">
                     <div className="flex flex-col items-center opacity-40">
-                       <Filter size={40} className="text-slate-200 mb-2" />
-                       <p className="text-slate-400 font-medium italic">No logs found matching those filters.</p>
-                       <button onClick={resetFilters} className="mt-4 text-sky-600 text-xs font-bold uppercase hover:underline">Clear all filters</button>
+                      <Filter size={40} className="text-slate-200 mb-2" />
+                      <p className="text-slate-400 font-medium italic">No logs found matching those filters.</p>
+                      <button onClick={resetFilters} className="mt-4 text-sky-600 text-xs font-bold uppercase hover:underline">Clear all filters</button>
                     </div>
                   </td>
                 </tr>

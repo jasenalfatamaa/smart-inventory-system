@@ -17,11 +17,10 @@ const UserManagement: React.FC = () => {
   const [pass, setPass] = useState('');
   const [newPass, setNewPass] = useState('');
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedUser?.id) {
-      updateUser(selectedUser as User);
-      toast.success('User details updated');
+      await updateUser(selectedUser as User);
     } else {
       const u: User = {
         id: `u_${Date.now()}`,
@@ -31,15 +30,15 @@ const UserManagement: React.FC = () => {
         role: selectedUser?.role || 'ADMIN',
         avatar: `https://ui-avatars.com/api/?name=${selectedUser?.name}&background=38BDF8&color=fff`
       };
-      addUser(u, pass || 'pass123');
+      await addUser(u, pass || 'pass123');
     }
     setIsModalOpen(false);
   };
 
-  const handleResetPassword = (e: React.FormEvent) => {
+  const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedUser?.email) {
-      resetPassword(selectedUser.email, newPass);
+      await resetPassword(selectedUser.email, newPass);
       setIsResetModalOpen(false);
       setNewPass('');
     }
@@ -70,24 +69,24 @@ const UserManagement: React.FC = () => {
               </span>
               <div className="flex gap-1">
                 {currentUser?.role === 'SUPER_ADMIN' && (
-                  <button 
-                    onClick={() => { setSelectedUser(u); setNewPass(''); setIsResetModalOpen(true); }} 
+                  <button
+                    onClick={() => { setSelectedUser(u); setNewPass(''); setIsResetModalOpen(true); }}
                     className="p-1.5 text-slate-400 hover:text-amber-500 transition-colors"
                     title="Reset Password"
                   >
                     <KeyRound size={16} />
                   </button>
                 )}
-                <button 
-                  onClick={() => { setSelectedUser(u); setIsModalOpen(true); }} 
+                <button
+                  onClick={() => { setSelectedUser(u); setIsModalOpen(true); }}
                   className="p-1.5 text-slate-400 hover:text-sky-500 transition-colors"
                   title="Edit User"
                 >
                   <Edit2 size={16} />
                 </button>
                 {u.id !== currentUser?.id && (
-                  <button 
-                    onClick={() => { if(confirm('Delete user?')) deleteUser(u.id); }} 
+                  <button
+                    onClick={async () => { if (confirm('Delete user?')) await deleteUser(u.id); }}
                     className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
                     title="Delete User"
                   >
@@ -103,23 +102,23 @@ const UserManagement: React.FC = () => {
       {/* User Modal (Invite/Edit) */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={selectedUser?.id ? 'Edit User' : 'Invite New User'} size="md">
         <form onSubmit={handleSave} className="space-y-4">
-          <Input label="Full Name" value={selectedUser?.name || ''} onChange={e => setSelectedUser({...selectedUser, name: e.target.value})} required />
-          <Input label="Username" value={selectedUser?.username || ''} onChange={e => setSelectedUser({...selectedUser, username: e.target.value})} required />
-          <Input label="Email Address" type="email" value={selectedUser?.email || ''} onChange={e => setSelectedUser({...selectedUser, email: e.target.value})} required />
-          
+          <Input label="Full Name" value={selectedUser?.name || ''} onChange={e => setSelectedUser({ ...selectedUser, name: e.target.value })} required />
+          <Input label="Username" value={selectedUser?.username || ''} onChange={e => setSelectedUser({ ...selectedUser, username: e.target.value })} required />
+          <Input label="Email Address" type="email" value={selectedUser?.email || ''} onChange={e => setSelectedUser({ ...selectedUser, email: e.target.value })} required />
+
           {!selectedUser?.id && (
             <Input label="Initial Password" type="password" value={pass} onChange={e => setPass(e.target.value)} required />
           )}
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1.5">System Role</label>
-            <select 
-              className="w-full p-2.5 border border-slate-200 rounded-lg bg-white text-slate-900 outline-none focus:ring-2 focus:ring-sky-500/20" 
-              value={selectedUser?.role} 
-              onChange={e => setSelectedUser({...selectedUser, role: e.target.value as UserRole})}
+            <select
+              className="w-full p-2.5 border border-slate-200 rounded-lg bg-white text-slate-900 outline-none focus:ring-2 focus:ring-sky-500/20"
+              value={selectedUser?.role}
+              onChange={e => setSelectedUser({ ...selectedUser, role: e.target.value as UserRole })}
             >
-               <option value="ADMIN">Admin</option>
-               <option value="SUPER_ADMIN">Super Admin</option>
+              <option value="ADMIN">Admin</option>
+              <option value="SUPER_ADMIN">Super Admin</option>
             </select>
           </div>
 
@@ -134,13 +133,13 @@ const UserManagement: React.FC = () => {
       <Modal isOpen={isResetModalOpen} onClose={() => setIsResetModalOpen(false)} title="Reset Password" size="sm">
         <form onSubmit={handleResetPassword} className="space-y-4">
           <p className="text-sm text-slate-500">Resetting password for <strong>{selectedUser?.name}</strong>.</p>
-          <Input 
-            label="New Password" 
-            type="password" 
-            value={newPass} 
-            onChange={e => setNewPass(e.target.value)} 
+          <Input
+            label="New Password"
+            type="password"
+            value={newPass}
+            onChange={e => setNewPass(e.target.value)}
             placeholder="Min. 8 characters"
-            required 
+            required
           />
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="ghost" type="button" onClick={() => setIsResetModalOpen(false)}>Cancel</Button>

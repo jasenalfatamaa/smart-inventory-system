@@ -23,7 +23,7 @@ export interface Product {
   stock: number;
   minStock: number;
   price: number;
-  lastUpdated: string;
+  updatedAt: string;
 }
 
 export interface Transaction {
@@ -33,7 +33,8 @@ export interface Transaction {
   type: 'IN' | 'OUT';
   quantity: number;
   date: string;
-  user: string;
+  userName: string;
+  userId: string;
 }
 
 export interface AuthState {
