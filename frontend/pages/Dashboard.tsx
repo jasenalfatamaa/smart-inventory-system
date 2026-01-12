@@ -1,51 +1,46 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-  Package, 
-  TrendingUp, 
-  AlertTriangle, 
-  XCircle, 
-  BrainCircuit, 
-  RefreshCw,
+import {
+  Package,
+  TrendingUp,
+  AlertTriangle,
+  XCircle,
   Search,
   ArrowRight,
   ShoppingBag,
   CheckCircle2
 } from 'lucide-react';
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
 } from 'recharts';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Card from '../components/Card';
-import { getAIInventoryInsights } from '../geminiService';
 import { useInventory } from '../context';
 import StockBadge from '../components/StockBadge';
 
 const Dashboard: React.FC = () => {
   const { products, transactions, searchTerm } = useInventory();
   const [timeRange, setTimeRange] = useState('1W');
-  const [aiInsights, setAiInsights] = useState<string>('Analysing your inventory data...');
-  const [isAiLoading, setIsAiLoading] = useState(false);
 
   const searchResults = useMemo(() => {
     if (!searchTerm) return [];
-    return products.filter(p => 
-      p.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    return products.filter(p =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       p.sku.toLowerCase().includes(searchTerm.toLowerCase())
-    ).slice(0, 4); 
+    ).slice(0, 4);
   }, [searchTerm, products]);
 
   const alerts = useMemo(() => {
     return products
       .filter(p => p.stock < p.minStock)
-      .sort((a, b) => a.stock - b.stock); 
+      .sort((a, b) => a.stock - b.stock);
   }, [products]);
 
   // Robust date mapping for chart
@@ -63,7 +58,7 @@ const Dashboard: React.FC = () => {
     };
 
     const transactionMap: Record<string, { in: number, out: number }> = {};
-    
+
     transactions.forEach(tx => {
       const txDate = new Date(tx.date);
       const dateKey = getLocalDateKey(txDate);
@@ -76,8 +71,8 @@ const Dashboard: React.FC = () => {
       const d = new Date();
       d.setDate(now.getDate() - i);
       const dateKey = getLocalDateKey(d);
-      
-      const label = daysCount <= 7 
+
+      const label = daysCount <= 7
         ? d.toLocaleDateString('id-ID', { weekday: 'short' })
         : d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' });
 
@@ -105,21 +100,15 @@ const Dashboard: React.FC = () => {
     ];
   }, [products]);
 
-  const fetchInsights = async () => {
-    setIsAiLoading(true);
-    const text = await getAIInventoryInsights(products);
-    setAiInsights(text);
-    setIsAiLoading(false);
-  };
+  // Dashboard is fully client-side demo
 
-  useEffect(() => { fetchInsights(); }, [products.length]);
 
   return (
     <div className="space-y-6 pb-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-          <p className="text-slate-500">Live inventory monitoring and AI analysis.</p>
+          <p className="text-slate-500">Live inventory monitoring and system statistics.</p>
         </div>
       </div>
 
@@ -137,10 +126,10 @@ const Dashboard: React.FC = () => {
                   <StockBadge status={p.stock <= 0 ? 'Out of Stock' : p.stock < p.minStock ? 'Low' : 'Safe'} />
                 </div>
                 <div className="flex justify-between items-end mt-2">
-                   <p className="text-xs text-slate-500">Stock: <span className="font-bold text-slate-900">{p.stock}</span></p>
-                   <Link to="/inventory" className="text-xs text-sky-600 font-bold flex items-center gap-1 hover:underline">
-                      Manage <ArrowRight size={12} />
-                   </Link>
+                  <p className="text-xs text-slate-500">Stock: <span className="font-bold text-slate-900">{p.stock}</span></p>
+                  <Link to="/inventory" className="text-xs text-sky-600 font-bold flex items-center gap-1 hover:underline">
+                    Manage <ArrowRight size={12} />
+                  </Link>
                 </div>
               </div>
             ))}
@@ -183,24 +172,24 @@ const Dashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="flex-1 w-full min-h-[400px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 10, left: -15, bottom: 0 }}>
                   <defs>
                     <linearGradient id="colorIn" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.1}/>
-                      <stop offset="95%" stopColor="#38BDF8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#38BDF8" stopOpacity={0.1} />
+                      <stop offset="95%" stopColor="#38BDF8" stopOpacity={0} />
                     </linearGradient>
                     <linearGradient id="colorOut" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.05}/>
-                      <stop offset="95%" stopColor="#94A3B8" stopOpacity={0}/>
+                      <stop offset="5%" stopColor="#94A3B8" stopOpacity={0.05} />
+                      <stop offset="95%" stopColor="#94A3B8" stopOpacity={0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#94A3B8', fontWeight: 600}} dy={10} />
-                  <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fill: '#94A3B8', fontWeight: 600}} />
-                  <Tooltip 
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94A3B8', fontWeight: 600 }} dy={10} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#94A3B8', fontWeight: 600 }} />
+                  <Tooltip
                     contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)', fontSize: '12px' }}
                     labelStyle={{ fontWeight: 'bold', marginBottom: '4px' }}
                   />
@@ -232,7 +221,7 @@ const Dashboard: React.FC = () => {
               <AnimatePresence mode="popLayout">
                 {alerts.length > 0 ? (
                   alerts.map(p => (
-                    <motion.div 
+                    <motion.div
                       key={p.id}
                       layout
                       initial={{ opacity: 0, x: -10 }}
@@ -242,8 +231,8 @@ const Dashboard: React.FC = () => {
                       <div className="flex flex-col gap-0.5 min-w-0">
                         <p className="text-sm font-bold text-slate-900 truncate">{p.name}</p>
                         <p className="text-[10px] font-medium text-slate-500">
-                          Qty: <span className={p.stock <= 0 ? 'text-red-500 font-bold' : 'text-amber-600 font-bold'}>{p.stock}</span> 
-                          <span className="mx-1">/</span> 
+                          Qty: <span className={p.stock <= 0 ? 'text-red-500 font-bold' : 'text-amber-600 font-bold'}>{p.stock}</span>
+                          <span className="mx-1">/</span>
                           Min: {p.minStock}
                         </p>
                       </div>
@@ -255,7 +244,7 @@ const Dashboard: React.FC = () => {
                 ) : (
                   <div className="h-full flex flex-col items-center justify-center text-center py-6">
                     <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-500 mb-2">
-                       <CheckCircle2 size={20} />
+                      <CheckCircle2 size={20} />
                     </div>
                     <p className="text-xs font-bold text-slate-900">All Stock Safe</p>
                   </div>
@@ -269,34 +258,6 @@ const Dashboard: React.FC = () => {
                 </Link>
               </div>
             )}
-          </Card>
-
-          {/* AI Insights Panel */}
-          <Card glass className="flex flex-col flex-1">
-            <div className="flex items-center justify-between mb-4 shrink-0">
-              <div className="flex items-center gap-2">
-                <BrainCircuit className="text-sky-500" size={20} />
-                <h3 className="font-bold text-slate-900">AI Analysis</h3>
-              </div>
-              <button onClick={fetchInsights} disabled={isAiLoading} className="p-1.5 text-slate-400 hover:text-sky-500 transition-all">
-                <RefreshCw size={16} className={isAiLoading ? 'animate-spin' : ''} />
-              </button>
-            </div>
-            <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar min-h-[120px]">
-              {isAiLoading ? (
-                 <div className="space-y-3">
-                   <div className="h-3 bg-slate-100 rounded animate-pulse w-3/4"></div>
-                   <div className="h-3 bg-slate-100 rounded animate-pulse w-full"></div>
-                   <div className="h-3 bg-slate-100 rounded animate-pulse w-5/6"></div>
-                 </div>
-              ) : (
-                 <div className="bg-white/40 p-4 rounded-xl border border-white/60">
-                   <p className="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap italic">
-                     "{aiInsights}"
-                   </p>
-                 </div>
-              )}
-            </div>
           </Card>
         </div>
       </div>

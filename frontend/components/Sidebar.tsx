@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, 
-  Package, 
-  History, 
-  Users, 
+import {
+  LayoutDashboard,
+  Package,
+  History,
+  Users,
   UserCircle,
   LogOut,
   Warehouse,
@@ -59,7 +59,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
 
       <motion.div
         initial={false}
-        animate={{ 
+        animate={{
           width: isMobile ? '280px' : (collapsed ? '90px' : '260px'),
           x: isMobile && collapsed ? '-100%' : '0%',
           margin: isMobile ? '0px' : '16px',
@@ -68,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
         className={`
           fixed inset-y-0 left-0 z-50 h-full 
-          md:relative md:h-[calc(100vh-32px)] md:inset-auto
+          md:sticky md:top-4 md:h-[calc(100vh-32px)] md:shrink-0
         `}
       >
         {/* Main Sidebar Box */}
@@ -82,14 +82,14 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
           {/* Brand Header */}
           <div className="p-6 mb-4 flex items-center justify-between relative z-10 shrink-0">
             <div className="flex items-center gap-3">
-              <motion.div 
+              <motion.div
                 whileHover={{ rotate: 15, scale: 1.1 }}
                 className="w-11 h-11 bg-gradient-to-br from-sky-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-sky-500/20 shrink-0"
               >
                 <Warehouse className="text-white w-6 h-6" />
               </motion.div>
               {(!collapsed || isMobile) && (
-                <motion.span 
+                <motion.span
                   initial={{ opacity: 0, x: -10 }}
                   animate={{ opacity: 1, x: 0 }}
                   className="font-bold text-xl text-white tracking-tight whitespace-nowrap"
@@ -128,11 +128,11 @@ const Sidebar: React.FC<SidebarProps> = ({ collapsed, setCollapsed }) => {
                       transition={{ type: "spring", stiffness: 300, damping: 30 }}
                     />
                   )}
-                  
+
                   <item.icon className={`w-5 h-5 relative z-10 transition-transform group-hover:scale-110 shrink-0 ${isActive ? 'text-sky-400' : ''}`} />
-                  
+
                   {(!collapsed || isMobile) && (
-                    <motion.span 
+                    <motion.span
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="font-semibold text-sm relative z-10 whitespace-nowrap"

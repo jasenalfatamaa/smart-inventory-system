@@ -13,11 +13,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
   const { searchTerm, setSearchTerm } = useInventory();
 
   return (
-    <header className="h-24 flex items-center justify-between px-8 shrink-0 z-40 relative">
+    <header className="h-20 flex items-center justify-between px-8 shrink-0 z-40 sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200/50">
       <div className="flex items-center gap-6">
-        <motion.button 
+        <motion.button
           whileTap={{ scale: 0.9 }}
-          onClick={toggleSidebar} 
+          onClick={toggleSidebar}
           className="md:hidden p-3 bg-white text-slate-500 shadow-sm rounded-2xl border border-slate-100"
         >
           <Menu size={20} />
@@ -25,8 +25,8 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
         <div className="hidden sm:flex items-center gap-3 bg-white/60 backdrop-blur-md px-5 py-3 rounded-[20px] border border-white shadow-sm w-72 md:w-96 transition-all focus-within:ring-4 focus-within:ring-sky-500/10 focus-within:border-sky-400/50 group">
           <Search size={18} className="text-slate-400 group-focus-within:text-sky-500 transition-colors" />
-          <input 
-            placeholder="Search products, users..." 
+          <input
+            placeholder="Search products, users..."
             className="bg-transparent border-none outline-none text-sm text-slate-900 w-full placeholder:text-slate-400 font-medium"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -44,7 +44,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
       </div>
 
       <div className="flex items-center gap-4">
-        <motion.button 
+        <motion.button
           whileHover={{ y: -2 }}
           className="relative p-3 bg-white text-slate-500 shadow-sm rounded-2xl border border-slate-100 transition-all hover:text-sky-500"
         >
@@ -54,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
 
         <div className="h-10 w-px bg-slate-200/60 mx-2"></div>
 
-        <motion.div 
+        <motion.div
           whileHover={{ scale: 1.02 }}
           className="flex items-center gap-3 pl-2 pr-1 py-1 bg-white/80 backdrop-blur-sm rounded-2xl border border-white shadow-sm cursor-pointer"
         >
@@ -62,9 +62,9 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSidebar }) => {
             <p className="text-sm font-bold text-slate-900 leading-tight">{user?.name}</p>
             <p className="text-[10px] font-bold text-sky-500 uppercase tracking-tighter">{user?.role.replace('_', ' ')}</p>
           </div>
-          <img 
-            src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=38BDF8&color=fff`} 
-            alt="avatar" 
+          <img
+            src={user?.avatar || `https://ui-avatars.com/api/?name=${user?.name}&background=38BDF8&color=fff`}
+            alt="avatar"
             className="w-10 h-10 rounded-xl object-cover ring-2 ring-sky-500/10 shadow-md"
           />
         </motion.div>

@@ -64,29 +64,31 @@ const Layout: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-slate-50 font-sans">
+    <div className="flex h-screen bg-slate-50 font-sans">
       {/* Dynamic Background Glow */}
       <div className="fixed top-[-10%] right-[-5%] w-[40%] h-[40%] bg-sky-200/20 blur-[120px] rounded-full pointer-events-none" />
       <div className="fixed bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-blue-200/10 blur-[120px] rounded-full pointer-events-none" />
 
       <Sidebar collapsed={isSidebarCollapsed} setCollapsed={setIsSidebarCollapsed} />
 
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+      <div className="flex-1 flex flex-col min-w-0 relative">
         <Navbar toggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
 
         <main className="flex-1 overflow-y-auto px-4 md:px-8 pb-8 custom-scrollbar relative z-10">
           <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<PageWrapper><Dashboard /></PageWrapper>} />
-              <Route path="/inventory" element={<PageWrapper><Inventory /></PageWrapper>} />
-              <Route path="/logs" element={<PageWrapper><TransactionLogs /></PageWrapper>} />
-              <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
-              <Route path="/users" element={
-                <ProtectedRoute roles={['SUPER_ADMIN']}>
-                  <PageWrapper><UserManagement /></PageWrapper>
-                </ProtectedRoute>
-              } />
-            </Routes>
+            <motion.div key={location.pathname} className="h-full">
+              <Routes location={location}>
+                <Route path="/" element={<PageWrapper><Dashboard /></PageWrapper>} />
+                <Route path="/inventory" element={<PageWrapper><Inventory /></PageWrapper>} />
+                <Route path="/logs" element={<PageWrapper><TransactionLogs /></PageWrapper>} />
+                <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+                <Route path="/users" element={
+                  <ProtectedRoute roles={['SUPER_ADMIN']}>
+                    <PageWrapper><UserManagement /></PageWrapper>
+                  </ProtectedRoute>
+                } />
+              </Routes>
+            </motion.div>
           </AnimatePresence>
         </main>
       </div>

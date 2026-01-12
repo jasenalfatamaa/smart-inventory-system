@@ -21,7 +21,7 @@ export const getAIInventoryInsights = async (products: Product[]) => {
     }));
 
     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+      model: 'gemini-1.5-flash',
       contents: `Analisis data inventaris ini dan berikan saran restock singkat (maks 3 poin): ${JSON.stringify(inventorySummary)}`,
       config: {
         systemInstruction: "Anda adalah asisten manajemen inventaris cerdas. Berikan wawasan strategis tentang stok barang.",
