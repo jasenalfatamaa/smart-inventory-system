@@ -18,7 +18,6 @@ COPY metadata.json .
 COPY App.tsx .
 COPY context.tsx .
 COPY index.tsx .
-COPY geminiService.ts .
 COPY types.ts .
 COPY index.css .
 COPY components ./components
