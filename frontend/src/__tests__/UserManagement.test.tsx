@@ -1,6 +1,7 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { AppProvider } from '../context';
-import UserManagement from '../pages/UserManagement';
+import { AppProvider } from '../../context';
+import UserManagement from '../../pages/UserManagement';
 import { MemoryRouter } from 'react-router-dom';
 import { expect, test, describe } from 'vitest';
 
@@ -12,10 +13,9 @@ const MockApp = ({ children }: { children: React.ReactNode }) => (
 
 describe('User Management', () => {
     test('renders user list for super admin', () => {
-        // Note: In context.tsx, the default mock user is null, but we can test if it renders the list of INITIAL_USERS
         render(<MockApp><UserManagement /></MockApp>);
-        expect(screen.getByText(/Super Admin/i)).toBeInTheDocument();
-        expect(screen.getByText(/Admin Gudang/i)).toBeInTheDocument();
+        expect(screen.getAllByText(/Super Admin/i).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/Admin Gudang/i).length).toBeGreaterThan(0);
     });
 
     test('contains add user button', () => {

@@ -1,12 +1,18 @@
+import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { AppProvider } from '../context';
-import Dashboard from '../pages/Dashboard';
+import { AppProvider } from '../../context';
+import Dashboard from '../../pages/Dashboard';
 import { MemoryRouter } from 'react-router-dom';
-import { expect, test, describe } from 'vitest';
+import { expect, test, describe, vi } from 'vitest';
 
 // Mock Recharts because it's hard to test in JSDOM
 vi.mock('recharts', () => ({
     ResponsiveContainer: ({ children }: any) => <div>{children}</div>,
+    AreaChart: ({ children }: any) => <div data-testid="area-chart">{children}</div>,
+    Area: () => null,
+    defs: () => null,
+    linearGradient: () => null,
+    stop: () => null,
     BarChart: () => <div data-testid="bar-chart" />,
     Bar: () => null,
     XAxis: () => null,
@@ -35,7 +41,7 @@ describe('Dashboard Features', () => {
 
     test('renders charts', () => {
         render(<MockApp><Dashboard /></MockApp>);
-        expect(screen.getByTestId('bar-chart')).toBeInTheDocument();
-        expect(screen.getByTestId('pie-chart')).toBeInTheDocument();
+        expect(screen.getByTestId('area-chart')).toBeInTheDocument();
+        // bar-chart and pie-chart are not in current Dashboard.tsx, they were replaced by AreaChart
     });
 });

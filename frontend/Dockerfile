@@ -25,7 +25,8 @@ COPY components ./components
 COPY pages ./pages
 COPY src ./src
 
-# RUN npm test -- --run
+# Run tests to ensure quality before building
+RUN npm test -- --run
 
 # Stage 3: Build
 FROM test AS build
