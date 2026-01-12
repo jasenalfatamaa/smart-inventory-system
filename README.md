@@ -1,7 +1,7 @@
 # 📦 Smart Inventory System (Frontend Demo)
 
 [![CI (Test and Build)](https://github.com/jasenalfatamaa/smart-inventory-system/actions/workflows/ci.yml/badge.svg)](https://github.com/jasenalfatamaa/smart-inventory-system/actions/workflows/ci.yml)
-[![Vercel Deployment](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://smart-inventory-system.vercel.app)
+[![Vercel Deployment](https://img.shields.io/badge/Deploy-Vercel-black?logo=vercel)](https://smartinv-sys.vercel.app/)
 
 **SmartInv** is a modern, high-performance Smart Inventory Management System dashboard built as a standalone frontend demo. This project showcases a premium UI/UX, robust state management, and a production-ready CI/CD pipeline.
 
@@ -17,8 +17,8 @@ graph TD
     
     subgraph "CI/CD Pipeline"
         GitHub[GitHub Repository] -->|Push/PR| GHA[GitHub Actions CI]
-        GHA -->|Unit Tests| Test[Vitest Execution]
-        GHA -->|Build Check| Build[Vite Build Verification]
+        GHA --> Test[Vitest Execution]
+        Test -->|Success| Build[Vite Build Verification]
     end
 
     subgraph "Frontend Application Core"
