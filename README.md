@@ -15,10 +15,13 @@ The project follows a modern **Frontend-first** architecture designed for rapid 
 graph TD
     User((User/Client)) -->|HTTPS| Vercel[Vercel Edge Network]
     
-    subgraph "CI/CD Pipeline"
+    subgraph "CI/CD Pipeline (GitHub Actions)"
         GitHub[GitHub Repository] -->|Push/PR| GHA[GitHub Actions CI]
-        GHA --> Test[Vitest Execution]
-        Test -->|Success| Build[Vite Build Verification]
+        GHA --> Test{Unit Tests}
+        Test -->|Pass| Build[Build Verification]
+        Test -->|Fail| Stop[Deployment Blocked]
+        Build -->|Pass| Vercel[Vercel Production]
+        Build -->|Fail| Stop
     end
 
     subgraph "Frontend Application Core"
